@@ -1,4 +1,4 @@
-﻿namespace Sitecore.Support.ExperienceExplorer.Business.Pipelines.HttpRequest.EnableExperienceModePipeline
+﻿namespace Sitecore.Support.ExperienceExplorer.Business.Pipelines.HttpRequest
 {
     using Sitecore.Data;
     using Sitecore.Diagnostics;
@@ -15,7 +15,10 @@
     {
         public override void Process(HttpRequestArgs args)
         {
-            WebUtil.SetCookieValue(SettingsHelper.AddOnQueryStringKey, "0");
+            if (!Sitecore.Context.PageMode.IsNormal)
+            {
+                WebUtil.SetCookieValue(SettingsHelper.AddOnQueryStringKey, "0");
+            }
             Assert.ArgumentNotNull(args, "args");
             if (!SettingsHelper.ExperienceModePipelineEnabled)
             {
@@ -43,5 +46,6 @@
                 }
             }
         }
+
     }
 }

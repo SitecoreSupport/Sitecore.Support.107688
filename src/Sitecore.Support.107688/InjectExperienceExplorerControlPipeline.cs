@@ -1,4 +1,4 @@
-﻿namespace Sitecore.Support.ExperienceExplorer.Business.Pipelines.HttpRequest.EnableExperienceModePipeline
+﻿namespace Sitecore.Support.ExperienceExplorer.Business.Pipelines.RenderLayout
 {
     using Sitecore.Configuration;
     using Sitecore.Diagnostics;
@@ -6,7 +6,7 @@
     using Sitecore.ExperienceExplorer.Business.Helpers;
     using Sitecore.ExperienceExplorer.Business.Managers;
     using Sitecore.ExperienceExplorer.Business.Utilities;
-    using Sitecore.Pipelines.HttpRequest;
+    using Sitecore.Pipelines.RenderLayout;
     using Sitecore.Publishing;
     using Sitecore.Sites;
     using Sitecore.Web;
@@ -17,7 +17,7 @@
 
     public class InjectExperienceExplorerControlPipeline 
     {
-        public void Process(HttpRequestArgs args)
+        public void Process(RenderLayoutArgs args)
         {
             if (SettingsHelper.ExperienceModePipelineEnabled && Context.Item != null)
             {
@@ -39,7 +39,10 @@
                 {
                     try
                     {
-                        WebUtil.SetCookieValue(SettingsHelper.AddOnQueryStringKey, flag ? "1" : "0");
+                        if (!Sitecore.Context.PageMode.IsNormal)
+                        {
+                            WebUtil.SetCookieValue(SettingsHelper.AddOnQueryStringKey, flag ? "1" : "0");
+                        }
                         if (!flag)
                         {
                             goto IL_0142;
@@ -91,6 +94,5 @@
                 HttpContext.Current.Session["IsFirstTime"] = false;
             }
         }
-
     }
 }
